@@ -17,12 +17,12 @@ class NewUserView(APIView):
             return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Write to a txt file
-        with open('users.txt', 'a') as file:
-            file.write(json.dumps({
-                'firstName': first_name,
-                'lastName': last_name,
-                'email': email
-            }) + '\n')
+        # with open('users.txt', 'a') as file:
+        #     file.write(json.dumps({
+        #         'firstName': first_name,
+        #         'lastName': last_name,
+        #         'email': email
+        #     }) + '\n')
 
         # Send data to Klaviyo API
         klaviyo_url = "https://a.klaviyo.com/api/profiles/"
