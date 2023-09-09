@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import json
+import requests
 
 class NewUserView(APIView):
 
@@ -23,4 +24,29 @@ class NewUserView(APIView):
                 'email': email
             }) + '\n')
 
-        return Response({"message": "Data saved successfully"}, status=status.HTTP_201_CREATED)
+        # Send data to Klaviyo API
+        klaviyo_url = "https://a.klaviyo.com/api/profiles/"
+        klaviyo_payload = {
+            "data": {
+                "type": "profile",
+                "attributes": {
+                    "email": email,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "properties": {}
+                }
+            }
+        }
+        klaviyo_headers = {
+            "accept": "application/json",
+            "revision": "2023-08-15",
+            "content-type": "application/json",
+            "Authorization": "Klaviyo-API-Key pk_37284532fd854df3046bf5098d512fd0fc"
+        }
+
+        klaviyo_response = requests.post(klaviyo_url, json=klaviyo_payload, headers=klaviyo_headers)
+
+        if klaviyo_response.status_code != 201:  # Assuming 201 is the success status code for Klaviyo
+            return Response({"error": "Failed to send data to Klaviyo", "klaviyo_response": klaviyo_response.text}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": "Data saved and sent to Klaviyo successfully"}, status=status.HTTP_201_CREATED)
