@@ -11,10 +11,7 @@ class NewUserView(APIView):
 
     def post(self, request):
         # Use for prod key in .env file
-        # KLAVIYO_API_KEY = config('KLAVIYO_API_KEY')
-
-        # Use for sandbox key
-        KLAVIYO_API_KEY = "pk_37284532fd854df3046bf5098d512fd0fc"
+        KLAVIYO_API_KEY = config('KLAVIYO_API_KEY')
 
         data = request.data
         first_name = data.get('firstName')
