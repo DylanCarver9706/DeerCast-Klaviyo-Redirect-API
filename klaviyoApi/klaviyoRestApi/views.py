@@ -3,10 +3,19 @@ from rest_framework.response import Response
 from rest_framework import status
 import json
 import requests
+from decouple import config
 
 class NewUserView(APIView):
 
+    
+
     def post(self, request):
+        # Use for prod key in .env file
+        # KLAVIYO_API_KEY = config('KLAVIYO_API_KEY')
+
+        # Use for sandbox key
+        KLAVIYO_API_KEY = "pk_37284532fd854df3046bf5098d512fd0fc"
+
         data = request.data
         first_name = data.get('firstName')
         last_name = data.get('lastName')
@@ -41,7 +50,7 @@ class NewUserView(APIView):
             "accept": "application/json",
             "revision": "2023-08-15",
             "content-type": "application/json",
-            "Authorization": "Klaviyo-API-Key pk_37284532fd854df3046bf5098d512fd0fc"
+            "Authorization": f"Klaviyo-API-Key {KLAVIYO_API_KEY}"
         }
 
         klaviyo_response = requests.post(klaviyo_url, json=klaviyo_payload, headers=klaviyo_headers)
